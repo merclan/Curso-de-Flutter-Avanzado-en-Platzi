@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:generic_bloc_provider/generic_bloc_provider.dart';
+import 'package:platzi_trips_app/place/ui/screens/add_place_screen.dart';
 import 'package:platzi_trips_app/user/bloc/bloc_user.dart';
 import 'package:platzi_trips_app/user/ui/widgets/circle_button.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ButtonsBar extends StatelessWidget {
   UserBloc userBloc;
@@ -20,8 +24,17 @@ class ButtonsBar extends StatelessWidget {
                 Color.fromRGBO(255, 255, 255, 1), () => {}),
             //CircleButton(true, Icons.card_travel, 20.0, Color.fromRGBO(255, 255, 255, 0.6)),
             //TODO: add new place
-            CircleButton(false, Icons.add, 40.0,
-                Color.fromRGBO(255, 255, 255, 1), () => {}),
+            CircleButton(
+                false, Icons.add, 40.0, Color.fromRGBO(255, 255, 255, 1), () {
+              ImagePicker.pickImage(source: ImageSource.camera)
+                  .then((File image) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            AddPlaceScreen(image: image)));
+              }).catchError((onError) => print(onError));
+            }),
             //sign out
             CircleButton(false, Icons.exit_to_app, 20.0,
                 Color.fromRGBO(255, 255, 255, 1), () => {userBloc.signOut()}),
